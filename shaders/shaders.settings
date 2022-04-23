@@ -1,0 +1,13 @@
+
+#define SHADOWS
+#define SHADOWS_TYPE 2
+#define SHADOWS_SAMPLES 3
+#define SHADOWS_COLOR
+#define SHADOWS_BIAS 0.005
+#define SHADOWS_DISTORTION_MAGNITUDE 1.0
+#define SHADOWS_MIN_DISTORTION_FACTOR 0.1
+#define SHADOWS_STRENGTH 0.4
+
+const int shadowMapResolution = 2048;
+const float sunPathRotation = 25.0;
+
