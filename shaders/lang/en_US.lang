@@ -1,0 +1,35 @@
+
+# Shadow menu.
+screen.SHADOWS=Shadows
+screen.SHADOWS.comment=Shadow settings, like shadow quality, type, and color.
+option.SHADOWS=Shadows
+option.SHADOWS.comment=Toggle shadows.
+option.shadowMapResolution=Shadowmap Resolution
+option.shadowMapResolution.comment=Resolution used to render shadows. Larger values will improve shadow resolution, but reduce performance significantly.
+value.shadowMapResolution.256=Lowest
+value.shadowMapResolution.512=Low
+value.shadowMapResolution.1024=Medium
+value.shadowMapResolution.2048=Good
+value.shadowMapResolution.3072=Gooder
+value.shadowMapResolution.4096=Goodest
+value.shadowMapResolution.6144=Crazy
+value.shadowMapResolution.8192=Psycho
+value.shadowMapResolution.16384=Evil
+option.SHADOWS_TRANSPARENCY=Transparent Shadows
+option.SHADOWS_TRANSPARENCY.comment=Toggle transparent shadows, which allow light to pass through translucent objects.
+option.SHADOWS_COLOR=Colored Shadows
+option.SHADOWS_COLOR.comment=Toggle colored shadows, which tints light coming through translucent objects.
+option.SHADOWS_TYPE=Shadow Type
+option.SHADOWS_TYPE.comment=Type of shadow to render.
+value.SHADOWS_TYPE.0=Unfiltered
+value.SHADOWS_TYPE.1=Smooth
+value.SHADOWS_TYPE.2=Soft
+option.SHADOWS_SAMPLES=Shadow Smoothness
+option.SHADOWS_SAMPLES.comment=Improves filtered and soft shadows by increasing the number of samples.
+value.SHADOWS_SAMPLES.2=Low
+value.SHADOWS_SAMPLES.3=Medium
+value.SHADOWS_SAMPLES.4=High
+value.SHADOWS_SAMPLES.5=Too High
+option.SHADOWS_STRENGTH=Shadow Strength
+option.SHADOWS_STRENGTH.comment=How much shadows decrease light values.
+
