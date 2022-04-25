@@ -23,7 +23,7 @@ void main() {
 
     // Compute dot product of normal with light position for lighting uses.
     float lightDot = dot(normalize(shadowLightPosition), normal);
-    bool facingAwayFromLight = lightDot < 0.0;
+    bool facingAwayFromLight = lightDot < 0.005;
 
 #ifdef SHADOWS
     // Are we within the shadowmap?
