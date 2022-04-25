@@ -54,14 +54,14 @@ void main() {
     bool inShadow = facingAwayFromLight || (inRange && shadowLightMultiplier < 1.0);
     bool inTransShadow = inRange && !inShadow && transShadowLightMultiplier < 1.0;
     fragColor.rgb *= inTransShadow ? shadowColor.rgb : vec3(1.0);
-    light.y *= shadowLightMultiplier;
+    light.y *= (inShadow) ? shadowLightMultiplier : 1.0;
 #else
     // For non-transparent shadows, just check if any block is obscuring the light.
     float shadowLightMultiplier = facingAwayFromLight ? 
                                         (1.0-SHADOWS_STRENGTH) : 
                                         getShadowLightMultiplier(shadowtex0, shadowCoord.xyz);
-
-    light.y *= shadowLightMultiplier;
+    bool inShadow = facingAwayFromLight || (inRange && shadowLightMultiplier < 1.0);
+    light.y *= (inShadow) ? shadowLightMultiplier : 1.0;
 #endif // SHADOWS_TRANSPARENCY
 #endif // SHADOWS
 

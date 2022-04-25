@@ -6,9 +6,10 @@
 #define SHADOWS_SAMPLES 3                   // Number of samples for PCF/PCSS. [2 3 4 5]
 #define SHADOWS_STRENGTH 0.4                // Decrease in light due to shadows. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0]
 #define SHADOWS_BIAS 0.01
-#define SHADOWS_DISTORTION_MAGNITUDE 0.5
+#define SHADOWS_DISTORTION_MAGNITUDE 1
 #define SHADOWS_MIN_DISTORTION_FACTOR 0.1
 const int shadowMapResolution = 2048;       // Shadowmap resolution. [256 512 1024 2048 3072 4096 8192 16384]
 
 const float sunPathRotation = 25.0;
 
+#define CLOUDS_TYPE 1
