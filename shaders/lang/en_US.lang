@@ -26,10 +26,10 @@ value.SHADOWS_TYPE.1=Smooth
 value.SHADOWS_TYPE.2=Soft
 option.SHADOWS_SAMPLES=Shadow Smoothness
 option.SHADOWS_SAMPLES.comment=Improves filtered and soft shadows by increasing the number of samples.
-value.SHADOWS_SAMPLES.2=Low
-value.SHADOWS_SAMPLES.3=Medium
-value.SHADOWS_SAMPLES.4=High
-value.SHADOWS_SAMPLES.5=Too High
+value.SHADOWS_SAMPLES.2=Lowest
+value.SHADOWS_SAMPLES.3=Low
+value.SHADOWS_SAMPLES.4=Medium
+value.SHADOWS_SAMPLES.5=High
 option.SHADOWS_STRENGTH=Shadow Strength
 option.SHADOWS_STRENGTH.comment=How much shadows decrease light values.
 

@@ -41,32 +41,27 @@ void main() {
                                         getShadowLightMultiplier(shadowtex1, shadowCoord.xyz);
     // Second, the translucent shadowmap is checked to see if there's a transluscent block obscuring the light.
     float transShadowLightMultiplier = getShadowLightMultiplier(shadowtex0, shadowCoord.xyz);
-    vec4 shadowLightColor = texture2D(shadowcolor0, shadowCoord.xy);
-
+    vec4 shadowColor = texture2D(shadowcolor0, shadowCoord.xy);
 #ifndef SHADOWS_COLOR
     // If we don't want shadow color, average the color to grayscale.
-    shadowLightColor.rgb = vec3((shadowLightColor.r + shadowLightColor.g + shadowLightColor.b)/3.0);
+    shadowColor.rgb = vec3((shadowColor.r + shadowColor.g + shadowColor.b)/3.0);
 #endif // !SHADOWS_COLOR
 
     // Mix the transparency of this block into the shadow light color, so it will affect the shadow strength.
-    shadowLightColor.rgb = mix(vec3(1.0), shadowLightColor.rgb, shadowLightColor.a);
+    shadowColor.rgb = mix(vec3(1.0), shadowColor.rgb, shadowColor.a);
+    float shadowColorBrightness = (shadowColor.r + shadowColor.g + shadowColor.b) / 3.0;
+    // We're in shadow if we are facing away from the light, or the skylight will be dimmed.
+    bool inShadow = facingAwayFromLight || (inRange && shadowLightMultiplier < 1.0);
+    bool inTransShadow = inRange && !inShadow && transShadowLightMultiplier < 1.0;
+    fragColor.rgb *= inTransShadow ? shadowColor.rgb : vec3(1.0);
+    light.y *= shadowLightMultiplier;
 #else
     // For non-transparent shadows, just check if any block is obscuring the light.
     float shadowLightMultiplier = facingAwayFromLight ? 
                                         (1.0-SHADOWS_STRENGTH) : 
                                         getShadowLightMultiplier(shadowtex0, shadowCoord.xyz);
-#endif // SHADOWS_TRANSPARENCY
 
-    // We're in shadow if we are facing away from the light, or the skylight will be dimmed.
-    bool inShadow = facingAwayFromLight || (inRange && shadowLightMultiplier < 1.0);
     light.y *= shadowLightMultiplier;
-
-#ifdef SHADOWS_TRANSPARENCY
-    // If we're not in full opaque shadow, but we're in translucent shadow, change the shadow's color.
-    bool inTransShadow = inRange && 
-                         transShadowLightMultiplier < 1.0 &&
-                         (!inShadow || transShadowLightMultiplier < shadowLightMultiplier);
-    fragColor.rgb *= inTransShadow ? shadowLightColor.rgb : vec3(1.0);
 #endif // SHADOWS_TRANSPARENCY
 #endif // SHADOWS
 
