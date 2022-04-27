@@ -1,6 +1,6 @@
-#version 150
+#version 330
 #include "shaders.settings"
-#include "lib/shadows.glsl"
+#include "/lib/shadows.glsl"
 
 attribute vec4 mc_Entity;
 

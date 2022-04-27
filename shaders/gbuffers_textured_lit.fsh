@@ -1,6 +1,9 @@
-#version 150
+#version 330
 #include "shaders.settings"
-#include "lib/shadows.glsl"
+uniform sampler2D noisetex;
+
+#include "/lib/shadows.glsl"
+#include "/lib/light.glsl"
 
 uniform sampler2D texture;
 uniform sampler2D lightmap;
@@ -11,9 +14,11 @@ uniform sampler2D shadowtex1;
 
 uniform vec3 shadowLightPosition;
 
+uniform mat4 gbufferModelViewInverse;
+
 in vec2 texCoord;
 in vec2 lightCoord;
-in vec4 shadowCoord;
+in vec4 vShadowCoord;
 in vec4 glColor;
 in vec3 normal;
 
@@ -26,6 +31,9 @@ void main() {
     bool facingAwayFromLight = lightDot < 0.005;
 
 #ifdef SHADOWS
+    vec4 shadowCoord = vShadowCoord;
+    float bias = (1.0-abs(lightDot)) * SHADOWS_BIAS;
+    shadowCoord.z -= bias;
     // Are we within the shadowmap?
     bool inRange = 
         shadowCoord.x >= 0.0 &&
@@ -66,10 +74,13 @@ void main() {
 #endif // SHADOWS
 
     // Diffuse lighting.
-    //light.y *= facingAwayFromLight ? 1.0 : lightDot;
+    vec3 lightPos = (gbufferModelViewInverse * vec4(shadowLightPosition, 1.0)).xyz;
+    //light.y *= facingAwayFromLight ? 1.0 : lightDot/maxLightDot;
 
     // Add lightmap contribution.
     vec3 lightColor = texture2D(lightmap, light).rgb;
 
-    gl_FragColor = fragColor * vec4(lightColor, 1.0);
+    gl_FragData[0] = fragColor * vec4(lightColor, 1.0);
+    gl_FragData[1] = vec4(gl_FragCoord.z*gl_FragCoord.w);
+    gl_FragData[2] = vec4(normal, 1.0);
 }
