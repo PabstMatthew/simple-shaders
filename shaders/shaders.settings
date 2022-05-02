@@ -2,17 +2,20 @@
 #define SHADOWS                             // Toggles all shadows.
 #define SHADOWS_TRANSPARENCY                // Toggles transparent shadows.
 #define SHADOWS_COLOR                       // Toggles colored (transparent) shadows.
-#define SHADOWS_TYPE 1                      // Changes shadow type. 0 is normal, 1 is PCF (filtered), 2 is PCSS (soft). [0 1 2]
-#define SHADOWS_SAMPLES 3                   // Number of samples for PCF/PCSS. [2 3 4 5]
+#define SHADOWS_TYPE 2                      // Changes shadow type. 0 is normal, 1 is PCF (filtered), 2 is PCSS (soft). [0 1 2]
+#define SHADOWS_SAMPLES 8                   // Number of samples for PCF. [4 6 8 10]
 #define SHADOWS_STRENGTH 0.4                // Decrease in light due to shadows. [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0]
-#define SHADOWS_BIAS 0.001
-#define SHADOWS_DISTORTION_MAGNITUDE 1.0
+#define SHADOWS_MAX_ATTEN (1.0-SHADOWS_STRENGTH)
+#define SHADOWS_DISTORTION_MAGNITUDE 1.0    // Changes the shadow render distance; increases may cause some visual bugs with soft shadows. [0.4 0.6 0.8 1.0 1.2 1.4 1.6 1.8 2.0]
 #define SHADOWS_MIN_DISTORTION_FACTOR 0.1
+#define SHADOWS_BIAS_MIN 0.0001
+#define SHADOWS_BIAS_MAX 0.0005
 const int shadowMapResolution = 2048;       // Shadowmap resolution. [256 512 1024 2048 3072 4096 8192 16384]
 
 const float sunPathRotation = 25.0;
 
 #define CLOUDS_TYPE 1
 
-const int noiseTextureResolution = 1024;
+const int noiseTextureResolution = 4096;
 
+const float PI = 3.1415;

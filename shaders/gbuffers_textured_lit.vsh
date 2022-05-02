@@ -1,7 +1,5 @@
 #version 330
 #include "shaders.settings"
-uniform sampler2D noisetex;
-
 #include "/lib/shadows.glsl"
 
 uniform mat4 shadowProjection;
@@ -11,7 +9,7 @@ uniform mat3 normalMatrix;
 
 out vec2 texCoord;
 out vec2 lightCoord;
-out vec4 vShadowCoord;
+out vec4 shadowCoord;
 out vec4 glColor;
 out vec3 normal;
 out float depth;
@@ -25,7 +23,8 @@ void main() {
 
 #ifdef SHADOWS
     // Calculate position of shadow relative to the main light.
-    vShadowCoord = shadowProjection * (shadowModelView * gl_Vertex);
-    vShadowCoord = distortAndNormalizeShadowCoord(vShadowCoord);
+    shadowCoord = shadowProjection * (shadowModelView * gl_Vertex);
+    shadowCoord = distortShadowCoord(shadowCoord);
+    shadowCoord = (shadowCoord*0.5) + 0.5;
 #endif
 }
