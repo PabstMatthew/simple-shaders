@@ -35,3 +35,27 @@ option.SHADOWS_STRENGTH.comment=How much shadows decrease light values.
 option.SHADOWS_DISTORTION_MAGNITUDE=Render Distance
 option.SHADOWS_DISTORTION_MAGNITUDE.comment=Changes the shadow render distance. Increases may cause some visual bugs with soft shadows.
 
+# SSAO Menu.
+screen.SSAO=SSAO
+screen.SSAO.comment=Screen-space ambient occlusion settings.
+option.SSAO=SSAO
+option.SSAO.comment=Toggle SSAO.
+option.SSAO_SAMPLES=Smoothness
+option.SSAO_SAMPLES.comment=Smooths ambient occlusion effects by increasing the number of samples.
+value.SSAO_SAMPLES.4=Low
+value.SSAO_SAMPLES.6=Medium
+value.SSAO_SAMPLES.8=High
+value.SSAO_SAMPLES.10=Highest
+option.SSAO_RADIUS_MAX=Range
+option.SSAO_RADIUS_MAX.comment=Increases the size of ambient occlusion effects.
+option.SSAO_CONTRAST=Contrast
+option.SSAO_CONTRAST.comment=Contrast between occluded and un-occluded areas.
+value.SSAO_CONTRAST.4.0=Low
+value.SSAO_CONTRAST.8.0=Medium
+value.SSAO_CONTRAST.16.0=High
+option.SSAO_FILTER_SCALE_FACTOR=Blur
+option.SSAO_FILTER_SCALE_FACTOR.comment=Increases the blurring of ambient occlusion.
+value.SSAO_FILTER_SCALE_FACTOR.256=Low
+value.SSAO_FILTER_SCALE_FACTOR.128=Medium
+value.SSAO_FILTER_SCALE_FACTOR.64=High
+

@@ -1,4 +1,5 @@
 
+// Shadow settings.
 #define SHADOWS                             // Toggles all shadows.
 #define SHADOWS_TRANSPARENCY                // Toggles transparent shadows.
 #define SHADOWS_COLOR                       // Toggles colored (transparent) shadows.
@@ -12,14 +13,15 @@
 #define SHADOWS_BIAS_MAX 0.0005
 const int shadowMapResolution = 2048;       // Shadowmap resolution. [256 512 1024 2048 3072 4096 8192 16384]
 
-#define SSAO
-#define SSAO_SAMPLES 8
+// SSAO settings.
+#define SSAO                                // Toggles SSAO.
+#define SSAO_SAMPLES 6                      // Number of samples for SSAO. [4 6 8 10]
 #define SSAO_RADIUS_MIN 0.001
-#define SSAO_RADIUS_MAX 0.01
+#define SSAO_RADIUS_MAX 0.002               // SSAO range. [0.001 0.002 0.003 0.004 0.005 0.006 0.007 0.008]
 #define SSAO_BIAS_MIN 0.01
 #define SSAO_BIAS_MAX 0.1
-#define SSAO_STRENGTH 4.0
-#define SSAO_FILTER_SCALE_FACTOR 128
+#define SSAO_CONTRAST 8.0                   // SSAO contrast. [4.0 8.0 16.0]
+#define SSAO_FILTER_SCALE_FACTOR 128        // Factor used to smooth SSAO map, smaller values blur the effect more. [256 128 64]
 
 const float sunPathRotation = 25.0;
 

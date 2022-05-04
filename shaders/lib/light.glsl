@@ -52,13 +52,13 @@ float getSSAO(vec3 screenCoords, vec3 normal,
         offCoordsScreen.z = texture2D(depthTex, offCoordsScreen.xy).r;
         // Check if this random point occludes the original one.
         // If so, scale the contribution by the depth difference.
-        float occluded = (offCoordsScreen.z-bias > screenCoords.z) ? 1.0 : 0.0;
+        float occluded = (offCoordsScreen.z > 0.0 && offCoordsScreen.z-bias > screenCoords.z) ? 1.0 : 0.0;
         float intensity = smoothstep(1.0, 0.0, abs(screenCoords.z-offCoordsScreen.z));
         occluded *= intensity; 
         occlusion += occluded;
     }
     occlusion /= SSAO_SAMPLES;
-    occlusion = occlusion*SSAO_STRENGTH;
+    occlusion = occlusion*SSAO_CONTRAST;
     occlusion = clamp(occlusion, 0.0, 1.0);
     return 1.0 - SHADOWS_STRENGTH*occlusion;
 }

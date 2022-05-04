@@ -17,7 +17,7 @@ void main() {
 
 #ifdef SSAO
     // Filter SSAO attenuation to smooth out the noise.
-    ivec2 filterSize = textureSize(composite, 0).xy / SSAO_FILTER_SCALE_FACTOR;
+    int filterSize = textureSize(composite, 0).y / SSAO_FILTER_SCALE_FACTOR;
     ivec2 pixelCoords = normToPixelCoords(composite, texCoord);
     float ssaoAtten = weightedTextureMean(composite, pixelCoords-filterSize, pixelCoords+filterSize);
     float depth = texture2D(gdepth, texCoord).r;
