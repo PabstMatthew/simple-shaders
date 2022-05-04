@@ -7,19 +7,31 @@ ivec2 normToPixelCoords(sampler2D tex, vec2 coords) {
 }
 
 float textureMean(sampler2D tex, ivec2 c0, ivec2 c1) {
-    vec2 texSize = vec2(1.0)/textureSize(tex, 0).xy;
     float sum = 0.0;
     for (int x = c0.x; x <= c1.x; x++) {
         for (int y = c0.y; y <= c1.y; y++) {
             sum += texelFetch(tex, ivec2(x,y), 0).r;
-            /*
-            vec2 c = vec2(x*texSize.x, y*texSize.y);
-            sum += texture2D(tex, c).r;
-            */
         }
     }
     float numSamples = (c1.x-c0.x+1)*(c1.y-c0.y+1);
     return sum / numSamples;
+}
+
+float weightedTextureMean(sampler2D tex, ivec2 c0, ivec2 c1) {
+    float sum = 0.0;
+    float maxSum = 0.0;
+    float xMid = (c1.x+c0.x+1)/2.0;
+    float yMid = (c1.y+c0.y+1)/2.0;
+    int yLen = c1.x-c0.x+1;
+    for (int x = c0.x; x <= c1.x; x++) {
+        for (int y = c0.y; y <= c1.y; y++) {
+            float weight = 0.5/abs(xMid-x)*abs(yMid-y);
+            maxSum += weight;
+            sum += weight*texelFetch(tex, ivec2(x,y), 0).r;
+        }
+    }
+    float numSamples = (c1.x-c0.x+1)*(c1.y-c0.y+1);
+    return sum / maxSum;
 }
 
 #endif // FILTER_GLSL

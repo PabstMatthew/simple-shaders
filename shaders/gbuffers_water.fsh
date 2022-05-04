@@ -41,5 +41,5 @@ void main() {
 
     gl_FragData[0] = fragColor;
     gl_FragData[1] = vec4(gl_FragCoord.z*gl_FragCoord.w);
-    gl_FragData[2] = vec4(normalize(normal*0.5+0.5), 1.0);
+    gl_FragData[2] = vec4(normalize(normal*0.5+0.5), 0.0);
 }

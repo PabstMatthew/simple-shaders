@@ -12,6 +12,15 @@
 #define SHADOWS_BIAS_MAX 0.0005
 const int shadowMapResolution = 2048;       // Shadowmap resolution. [256 512 1024 2048 3072 4096 8192 16384]
 
+#define SSAO
+#define SSAO_SAMPLES 8
+#define SSAO_RADIUS_MIN 0.001
+#define SSAO_RADIUS_MAX 0.01
+#define SSAO_BIAS_MIN 0.01
+#define SSAO_BIAS_MAX 0.1
+#define SSAO_STRENGTH 4.0
+#define SSAO_FILTER_SCALE_FACTOR 128
+
 const float sunPathRotation = 25.0;
 
 #define CLOUDS_TYPE 1
