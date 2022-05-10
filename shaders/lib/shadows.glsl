@@ -36,7 +36,7 @@ float pcf(sampler2D shadowmap, vec3 coords) {
     // This accounts for the shadow distortion, to avoid bias issues further away.
     float minSmooth = 0.001;
     float maxSmooth = 64.0;
-    float scale = max(0.01, dot(coords.xy-0.5, coords.xy-0.5));
+    float scale = max(0.02, dot(coords.xy-0.5, coords.xy-0.5));
     float radius = maxSmooth / (1.0+1.0/minSmooth*scale) / shadowMapResolution;
     // Check samples.
     float inShadow = 0.0;
@@ -99,6 +99,9 @@ vec3 getShadowAttenuation(vec4 shadowCoord, float lightDot,
                                         getShadowLightMultiplier(opaqueDepthMap, shadowCoord.xyz);
     // We're in shadow if we are facing away from the light, or the skylight will be dimmed.
     bool inOpaqueShadow = facingAwayFromLight || (inRange && opaqueDepth < shadowCoord.z);
+#if SHADOWS_TYPE == 1
+    inOpaqueShadow = inOpaqueShadow || (inRange && shadowLightMultiplier < 1.0);
+#endif
     // Second, the translucent shadowmap is checked to see if there's a transluscent block obscuring the light.
     float transDepth = texture2D(transDepthMap, shadowCoord.xy).r;
     bool inTransShadow = inRange && transDepth < shadowCoord.z;
