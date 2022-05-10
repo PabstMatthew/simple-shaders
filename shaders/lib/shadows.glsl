@@ -36,7 +36,7 @@ float pcf(sampler2D shadowmap, vec3 coords) {
     // This accounts for the shadow distortion, to avoid bias issues further away.
     float minSmooth = 0.001;
     float maxSmooth = 64.0;
-    float scale = max(0.02, dot(coords.xy-0.5, coords.xy-0.5));
+    float scale = max(0.04, dot(coords.xy*2.0-1.0, coords.xy*2.0-1.0));
     float radius = maxSmooth / (1.0+1.0/minSmooth*scale) / shadowMapResolution;
     // Check samples.
     float inShadow = 0.0;
