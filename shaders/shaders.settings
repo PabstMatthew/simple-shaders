@@ -16,10 +16,10 @@ const int shadowMapResolution = 2048;       // Shadowmap resolution. [256 512 10
 // SSAO settings.
 #define SSAO                                // Toggles SSAO.
 #define SSAO_SAMPLES 6                      // Number of samples for SSAO. [4 6 8 10]
-#define SSAO_RADIUS_MIN 0.001
-#define SSAO_RADIUS_MAX 0.002               // SSAO range. [0.001 0.002 0.003 0.004 0.005 0.006 0.007 0.008]
-#define SSAO_BIAS_MIN 0.01
-#define SSAO_BIAS_MAX 0.15
+#define SSAO_RADIUS_MIN 0.004
+#define SSAO_RADIUS_MAX 0.008               // SSAO range. [0.002 0.004 0.008 0.016]
+#define SSAO_BIAS_MIN 0.001
+#define SSAO_BIAS_MAX 0.2
 #define SSAO_CONTRAST 8.0                   // SSAO contrast. [4.0 8.0 16.0]
 #define SSAO_FILTER_SCALE_FACTOR 128        // Factor used to smooth SSAO map, smaller values blur the effect more. [256 128 64]
 

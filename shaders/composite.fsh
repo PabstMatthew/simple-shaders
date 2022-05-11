@@ -40,9 +40,9 @@ void main() {
         screenReflect.y > 0.0 &&
         screenReflect.y < 1.0;
     //color = (inRange) ? texture2D(gcolor, screenReflect.xy) : color;
-    color = vec4(screenReflect, 1.0);
-    //color = (trans) ? vec4(vec3(transDepth), 1.0) : color;
+    //color = (inRange) ? vec4(screenReflect, 1.0) : vec4(0.0);
     //color = vec4(screenToView(texCoord, gdepth, gbufferProjectionInverse).xy, 0.0, 1.0);
+    //color = (trans) ? vec4(vec3(transDepth), 1.0) : color;
     //color = vec4(vec3(depth), 1.0);
     */
 

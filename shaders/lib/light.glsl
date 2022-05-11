@@ -35,7 +35,7 @@ float getSSAO(vec2 screenCoords, vec3 normal,
     mat3 tbn = mat3(tangent, binormal, normal);
     // Use a larger sampling radius for points that are close to the camera.
     float depth = texture2D(depthTex, screenCoords).r;
-    float radius = max(SSAO_RADIUS_MIN, SSAO_RADIUS_MAX*depth);
+    float radius = mix(SSAO_RADIUS_MIN, SSAO_RADIUS_MAX, depth);
     // Use a smaller bias for surfaces glanced by the view direction.
     float normalDotEye = abs(normal.z);
     float bias = mix(SSAO_BIAS_MIN, SSAO_BIAS_MAX, depth);
@@ -53,7 +53,7 @@ float getSSAO(vec2 screenCoords, vec3 normal,
         float offDepth = texture2D(depthTex, offCoordsScreen.xy).r;
         // Check if this random point occludes the original one.
         // If so, scale the contribution by the depth difference.
-        float occluded = (offDepth > 0.0 && offDepth-bias > depth) ? 1.0 : 0.0;
+        float occluded = (offDepth > 0.0 && offDepth < 0.9 && offDepth-bias > depth) ? 1.0 : 0.0;
         float intensity = smoothstep(1.0, 0.0, abs(offDepth-depth));
         occluded *= intensity; 
         occlusion += occluded;
@@ -69,18 +69,15 @@ vec3 getReflection(vec2 screenCoords, vec3 normal,
         sampler2D transDepthTex, sampler2D opaqueDepthTex) {
     float maxDistance = 100.0;
     float resolution = 1.0;
-    float thickness = 0.1;
+    float thickness = 0.01;
     vec2 texSize = textureSize(transDepthTex, 0).xy;
 
     vec3 viewCoords = screenToView(screenCoords, transDepthTex, projectionInverse);
     vec3 reflection = normalize(reflect(viewCoords, normal));
-    return vec3(reflection);
-    /*
     if (reflection.z >= 0.0) {
         // Reflected ray is headed back towards the camera, so it's unlikely to hit anything.
         return vec3(0.0);
     }
-    */
 
     // Beginning and ending view coordinates of the ray.
     vec3 startView = viewCoords;
@@ -90,6 +87,7 @@ vec3 getReflection(vec2 screenCoords, vec3 normal,
     vec3 startScreen = viewToScreen(startView, projection);
          startScreen.xy *= texSize;
     vec3 endScreen = viewToScreen(endView, projection);
+    return endScreen;
          endScreen.xy *= texSize;
 
     // Vector from start to end screen coordinates.
@@ -105,6 +103,13 @@ vec3 getReflection(vec2 screenCoords, vec3 normal,
     vec2 increment = vec2(dX, dY) / max(delta, 0.001);
     for (int i = 0; i < min(int(delta), 100000); i++) {
         curScreen += increment;
+        bool inRange = curScreen.x > 0.0 &&
+                       curScreen.x < texSize.x &&
+                       curScreen.y > 0.0 &&
+                       curScreen.y < texSize.y;
+        if (!inRange) {
+            return vec3(-1.0);
+        }
         vec2 uv = curScreen / texSize;
         float geometryDepth = texture2D(opaqueDepthTex, uv).x;
         float t = i/delta;

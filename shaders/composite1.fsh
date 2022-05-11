@@ -26,4 +26,5 @@ void main() {
 #endif
 
     gl_FragData[0] = color;
+    //gl_FragData[0] = vec4(vec3(ssaoAtten), 1.0);
 }
