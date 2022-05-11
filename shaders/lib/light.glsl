@@ -21,23 +21,24 @@ float getDiffuseAttenuation(float lightDot) {
  *  depthTex: a texture containing the depth of points on the screen.
  *  noiseTex: a texture containing random noise.
  */
-float getSSAO(vec3 screenCoords, vec3 normal, 
+float getSSAO(vec2 screenCoords, vec3 normal, 
         mat4 projection, mat4 projectionInverse, 
         sampler2D depthTex, sampler2D noiseTex) {
 
-    vec3 viewCoords = screenToView(screenCoords, projectionInverse);
-    vec2 seed = screenCoords.xy;
-    vec3 noise = vec3(texture2D(noiseTex, seed).x);
-    noise = noise* 2.0 - 1.0;
+    vec3 viewCoords = screenToView(screenCoords, depthTex, projectionInverse);
+    vec2 seed = screenCoords;
+    vec3 noise = texture2D(noiseTex, seed).xyz;
+    noise = noise * 2.0 - 1.0;
     // Calculate the TBN matrix used to scale random noise vectors;
     vec3 tangent = normalize(noise - normal * dot(noise, normal));
     vec3 binormal = cross(normal, tangent);
     mat3 tbn = mat3(tangent, binormal, normal);
     // Use a larger sampling radius for points that are close to the camera.
-    float radius = max(SSAO_RADIUS_MIN, SSAO_RADIUS_MAX*screenCoords.z);
+    float depth = texture2D(depthTex, screenCoords).r;
+    float radius = max(SSAO_RADIUS_MIN, SSAO_RADIUS_MAX*depth);
     // Use a smaller bias for surfaces glanced by the view direction.
     float normalDotEye = abs(normal.z);
-    float bias = max(SSAO_BIAS_MIN, SSAO_BIAS_MAX*screenCoords.z);
+    float bias = mix(SSAO_BIAS_MIN, SSAO_BIAS_MAX, depth);
     // Take random samples in a hemisphere around this point.
     float occlusion = 0.0;
     for (int i = 0; i < SSAO_SAMPLES; i++) {
@@ -49,11 +50,11 @@ float getSSAO(vec3 screenCoords, vec3 normal,
         // Find the corresponding point in screen-space.
         vec3 offCoords = viewCoords + tbn*noise; 
         vec3 offCoordsScreen = viewToScreen(offCoords, projection);
-        offCoordsScreen.z = texture2D(depthTex, offCoordsScreen.xy).r;
+        float offDepth = texture2D(depthTex, offCoordsScreen.xy).r;
         // Check if this random point occludes the original one.
         // If so, scale the contribution by the depth difference.
-        float occluded = (offCoordsScreen.z > 0.0 && offCoordsScreen.z-bias > screenCoords.z) ? 1.0 : 0.0;
-        float intensity = smoothstep(1.0, 0.0, abs(screenCoords.z-offCoordsScreen.z));
+        float occluded = (offDepth > 0.0 && offDepth-bias > depth) ? 1.0 : 0.0;
+        float intensity = smoothstep(1.0, 0.0, abs(offDepth-depth));
         occluded *= intensity; 
         occlusion += occluded;
     }
@@ -61,6 +62,61 @@ float getSSAO(vec3 screenCoords, vec3 normal,
     occlusion = occlusion*SSAO_CONTRAST;
     occlusion = clamp(occlusion, 0.0, 1.0);
     return 1.0 - SHADOWS_STRENGTH*occlusion;
+}
+
+vec3 getReflection(vec2 screenCoords, vec3 normal,
+        mat4 projection, mat4 projectionInverse,
+        sampler2D transDepthTex, sampler2D opaqueDepthTex) {
+    float maxDistance = 100.0;
+    float resolution = 1.0;
+    float thickness = 0.1;
+    vec2 texSize = textureSize(transDepthTex, 0).xy;
+
+    vec3 viewCoords = screenToView(screenCoords, transDepthTex, projectionInverse);
+    vec3 reflection = normalize(reflect(viewCoords, normal));
+    return vec3(reflection);
+    /*
+    if (reflection.z >= 0.0) {
+        // Reflected ray is headed back towards the camera, so it's unlikely to hit anything.
+        return vec3(0.0);
+    }
+    */
+
+    // Beginning and ending view coordinates of the ray.
+    vec3 startView = viewCoords;
+    vec3 endView = viewCoords + reflection*maxDistance;
+
+    // Beginning and ending screen coordinates of the ray.
+    vec3 startScreen = viewToScreen(startView, projection);
+         startScreen.xy *= texSize;
+    vec3 endScreen = viewToScreen(endView, projection);
+         endScreen.xy *= texSize;
+
+    // Vector from start to end screen coordinates.
+    float dX = endScreen.x-startScreen.x;
+    float dY = endScreen.y-startScreen.y;
+
+    // Computes a delta s.t. the larger coordinate will increment by one screen pixel per iteration.
+    float useX = abs(dX) >= abs(dY) ? 1.0 : 0.0;
+    float delta = mix(abs(dY), abs(dX), useX) * clamp(resolution, 0.0, 1.0);
+
+    // Ray march from the starting position.
+    vec2 curScreen = startScreen.xy;
+    vec2 increment = vec2(dX, dY) / max(delta, 0.001);
+    for (int i = 0; i < min(int(delta), 100000); i++) {
+        curScreen += increment;
+        vec2 uv = curScreen / texSize;
+        float geometryDepth = texture2D(opaqueDepthTex, uv).x;
+        float t = i/delta;
+        //float viewDepth = startView.z*endView.z / mix(endView.z, startView.z, t);
+        vec3 curView = mix(startView, endView, t);
+        float screenDepth = viewToScreen(curView, projection).z;
+        float diff = geometryDepth - screenDepth;
+        if (diff > 0.0 && diff < thickness) {
+            return vec3(uv, 0.0);
+        }
+    }
+    return vec3(-1.0);
 }
 
 #endif // LIGHT_GLSL

@@ -5,10 +5,14 @@
 
 uniform sampler2D texture;
 uniform sampler2D lightmap;
+uniform sampler2D normals;
 
 uniform sampler2D shadowcolor0;
 uniform sampler2D shadowtex0;
 uniform sampler2D shadowtex1;
+
+uniform sampler2D depthtex0;
+uniform sampler2D depthtex1;
 
 uniform vec3 shadowLightPosition;
 
@@ -40,6 +44,7 @@ void main() {
     fragColor.rgb *= lightColor;
 
     gl_FragData[0] = fragColor;
-    gl_FragData[1] = vec4(gl_FragCoord.z*gl_FragCoord.w);
+    gl_FragData[1] = vec4(vec3(gl_FragCoord.z*gl_FragCoord.w), 1.0);
     gl_FragData[2] = vec4(normalize(normal*0.5+0.5), 1.0);
+    gl_FragData[3] = vec4(0.0, 0.0, 0.0, 1.0);
 }

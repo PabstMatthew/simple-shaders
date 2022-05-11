@@ -23,7 +23,6 @@ void main() {
     float depth = texture2D(gdepth, texCoord).r;
     bool sky = depth == 1.0;
     color.rgb *= (normal.w > 0.1 && !sky) ? ssaoAtten : 1.0;
-    //color = vec4(vec3(depth), 1.0);
 #endif
 
     gl_FragData[0] = color;
