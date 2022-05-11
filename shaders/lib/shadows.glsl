@@ -41,7 +41,7 @@ float pcf(sampler2D shadowmap, vec3 coords) {
     // Check samples.
     float inShadow = 0.0;
     float depthSum = 0.0;
-    for (float i = 0.0; i < 2*PI; i += (2.0*PI)/SHADOWS_SAMPLES) {
+    for (float i = 0.0001; i < 2*PI; i += (2.0*PI)/SHADOWS_SAMPLES) {
         vec2 offCoords = vec2(coords.x + radius*cos(i), coords.y + radius*sin(i));
         float depth = texture2D(shadowmap, offCoords).r;
 #if SHADOWS_TYPE == 2
