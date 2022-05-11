@@ -35,7 +35,7 @@ option.SHADOWS_STRENGTH.comment=How much shadows decrease light values.
 option.SHADOWS_DISTORTION_MAGNITUDE=Render Distance
 option.SHADOWS_DISTORTION_MAGNITUDE.comment=Changes the shadow render distance. Increases may cause some visual bugs with soft shadows.
 
-# SSAO Menu.
+# SSAO menu.
 screen.SSAO=SSAO
 screen.SSAO.comment=Screen-space ambient occlusion settings.
 option.SSAO=SSAO
@@ -58,4 +58,18 @@ option.SSAO_FILTER_SCALE_FACTOR.comment=Increases the blurring of ambient occlus
 value.SSAO_FILTER_SCALE_FACTOR.256=Low
 value.SSAO_FILTER_SCALE_FACTOR.128=Medium
 value.SSAO_FILTER_SCALE_FACTOR.64=High
+
+# Bloom menu.
+screen.BLOOM=Bloom
+screen.BLOOM.comment=Bloom effect settings. Blurs bright objects.
+option.BLOOM=Bloom
+option.BLOOM.comment=Toggle bloom.
+option.BLOOM_STRENGTH=Strength
+option.BLOOM.comment=Increases the brightness of bloom effects.
+option.BLOOM_FILTER_SCALE_FACTOR=Size
+option.BLOOM.comment=Increases the size of the bloom effect.
+value.BLOOM_FILTER_SCALE_FACTOR.128=Smallest
+value.BLOOM_FILTER_SCALE_FACTOR.96=Small
+value.BLOOM_FILTER_SCALE_FACTOR.64=Medium
+value.BLOOM_FILTER_SCALE_FACTOR.32=Large
 

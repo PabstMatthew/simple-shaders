@@ -23,6 +23,11 @@ const int shadowMapResolution = 2048;       // Shadowmap resolution. [256 512 10
 #define SSAO_CONTRAST 8.0                   // SSAO contrast. [4.0 8.0 16.0]
 #define SSAO_FILTER_SCALE_FACTOR 128        // Factor used to smooth SSAO map, smaller values blur the effect more. [256 128 64]
 
+// Bloom settings.
+#define BLOOM                               // Toggles bloom.
+#define BLOOM_STRENGTH 1.5                  // Bloom effect strength. [0.5 1.0 1.5 2.0 2.5 3.0]
+#define BLOOM_FILTER_SCALE_FACTOR 64        // Factor used to blur brightness map, smaller values blur the effect more. [128 96 64 32]
+
 const float sunPathRotation = 25.0;
 
 #define CLOUDS_TYPE 1

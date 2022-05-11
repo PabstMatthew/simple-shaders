@@ -2,6 +2,7 @@
 #include "shaders.settings"
 #include "lib/screen.glsl"
 #include "lib/light.glsl"
+#include "lib/color.glsl"
 
 uniform sampler2D gcolor;
 uniform sampler2D gdepth;
@@ -24,10 +25,15 @@ void main() {
     normal = normalize(normal*2.0-1.0);
     vec4 color = texture2D(gcolor, texCoord);
 
+    float ssaoAtten = 0.0;
+    float brightness = 0.0;
 #ifdef SSAO
     // Pass SSAO attenuation into composite (colortex3).
-    float ssaoAtten = getSSAO(texCoord, normal, gbufferProjection, gbufferProjectionInverse, gdepth, noisetex);
-    gl_FragData[3] = vec4(ssaoAtten);
+    ssaoAtten = getSSAO(texCoord, normal, gbufferProjection, gbufferProjectionInverse, gdepth, noisetex);
+#endif
+
+#ifdef BLOOM
+    brightness = texture2D(composite, texCoord).y;
 #endif
     /*
     bool sky = depth == 1.0;
@@ -50,4 +56,5 @@ void main() {
     gl_FragData[0] = color;
     gl_FragData[1] = vec4(depth);
     gl_FragData[2] = texture2D(gnormal, texCoord);
+    gl_FragData[3] = vec4(ssaoAtten, brightness, 0.0, 1.0);
 }

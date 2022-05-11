@@ -69,15 +69,18 @@ vec3 getReflection(vec2 screenCoords, vec3 normal,
         sampler2D transDepthTex, sampler2D opaqueDepthTex) {
     float maxDistance = 100.0;
     float resolution = 1.0;
-    float thickness = 0.01;
+    float thickness = 0.1;
     vec2 texSize = textureSize(transDepthTex, 0).xy;
 
+    // viewspace normal is correct
     vec3 viewCoords = screenToView(screenCoords, transDepthTex, projectionInverse);
     vec3 reflection = normalize(reflect(viewCoords, normal));
+    /*
     if (reflection.z >= 0.0) {
         // Reflected ray is headed back towards the camera, so it's unlikely to hit anything.
         return vec3(0.0);
     }
+    */
 
     // Beginning and ending view coordinates of the ray.
     vec3 startView = viewCoords;
@@ -87,7 +90,6 @@ vec3 getReflection(vec2 screenCoords, vec3 normal,
     vec3 startScreen = viewToScreen(startView, projection);
          startScreen.xy *= texSize;
     vec3 endScreen = viewToScreen(endView, projection);
-    return endScreen;
          endScreen.xy *= texSize;
 
     // Vector from start to end screen coordinates.
@@ -112,10 +114,13 @@ vec3 getReflection(vec2 screenCoords, vec3 normal,
         }
         vec2 uv = curScreen / texSize;
         float geometryDepth = texture2D(opaqueDepthTex, uv).x;
-        float t = i/delta;
-        //float viewDepth = startView.z*endView.z / mix(endView.z, startView.z, t);
-        vec3 curView = mix(startView, endView, t);
-        float screenDepth = viewToScreen(curView, projection).z;
+        float t =
+            mix((curScreen.y - startScreen.y) / dY,
+                (curScreen.x - startScreen.x) / dX, 
+                useX
+            );
+        t = clamp(t, 0.0, 1.0);
+        float screenDepth = startView.z*endView.z / mix(endView.z, startView.z, t);
         float diff = geometryDepth - screenDepth;
         if (diff > 0.0 && diff < thickness) {
             return vec3(uv, 0.0);
